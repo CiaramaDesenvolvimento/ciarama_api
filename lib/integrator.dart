@@ -219,7 +219,7 @@ class Comentarios {
         })
       );
       if (res.statusCode != 200) {
-        return res.body;
+        throw res.body;
       } else {
         final cmid = int.parse(res.body);
         await Future.wait(imagens.map((im) => uploadFoto(im, cmid)));
@@ -228,7 +228,7 @@ class Comentarios {
     } catch (e) {
       print(e);
     }
-    return 'Falha ao se comunicar com o servidor.';
+    throw 'Falha ao se comunicar com o servidor.';
   }
 
   // INTERFACE
@@ -371,13 +371,13 @@ class Credenciamento {
         if (note.isEmpty) {
           return 'Cadastro realizado com sucesso. Um e-mail de confirmação foi enviado para $email. Caso este não seja seu e-mail, solicite uma atualização de cadastro.';
         } else {
-          return note;
+          throw note;
         }
       }
     } catch (e) {
       print(e);
     }
-		return 'Falha ao se comunicar com o servidor.';
+		throw 'Falha ao se comunicar com o servidor.';
   }
 
   static Future<String> registrarFuncionario(String email, String matricula, String filial, String login, String senha) async {
@@ -401,13 +401,13 @@ class Credenciamento {
         if (note.isEmpty) {
           return 'Cadastro realizado com sucesso. Um e-mail de confirmação foi enviado para $email. Caso este não seja seu e-mail, solicite uma atualização de cadastro.';
         } else {
-          return note;
+          throw note;
         }
       }
     } catch (e) {
       print(e);
     }
-		return 'Falha ao se comunicar com o servidor.';
+		throw 'Falha ao se comunicar com o servidor.';
   }
 
   static Future<String> alteraSenha(Usuario user, String senhaNova) async {
@@ -422,11 +422,11 @@ class Credenciamento {
       if (res.statusCode == 200) {
         return Future.value(null);
       } else {
-        return 'Não foi possível alterar sua senha.';
+        throw 'Não foi possível alterar sua senha.';
       }
     } catch (e) {
       print(e);
-      return 'Não foi possível alterar sua senha. Falha ao se comunicar com o servidor.';
+      throw 'Não foi possível alterar sua senha. Falha ao se comunicar com o servidor.';
     }
   }
 }
@@ -596,12 +596,12 @@ class Agendamentos {
       if (res.statusCode == 200) {
         return parseJson(res.body, (v) => Solicitacao.fromJson(v));
       } else {
-        print(res.body);
+        throw res.body;
       }
     } catch (e) {
       print(e);
     }
-    return Future.value(null);
+    throw 'Falha ao se comunicar com o servidor: Erro interno.';
   }
 
   static Future<String> solicitar(SolicitacaoBase sol) async {
@@ -616,8 +616,8 @@ class Agendamentos {
       else                       return Future.value(null);
     } catch (e) {
       print(e);
-      return  'Falha ao se comunicar com o servidor: Erro Interno.';
     }
+    throw 'Falha ao se comunicar com o servidor: Erro Interno.';
   }
 
   static Future<String> agendar(String sol, Agendamento age) async {
@@ -628,12 +628,12 @@ class Agendamentos {
     );
     try {
       final res = await client.put(body: json.encode(age.toJson()));
-      if (res.statusCode != 200) return res.body;
+      if (res.statusCode != 200) throw res.body;
+      else return Future.value(null);
     } catch (e) {
       print(e);
-      return  'Falha ao se comunicar com o servidor: Erro Interno.';
     }
-    return Future.value(null);
+    throw 'Falha ao se comunicar com o servidor: Erro Interno.';
   }
 
   static Future<String> finalizar(String sol, String os) async {
@@ -644,12 +644,12 @@ class Agendamentos {
     );
     try {
       final res = await client.put();
-      if (res.statusCode != 200) return res.body;
+      if (res.statusCode != 200) throw res.body;
+      else return Future.value(null);
     } catch (e) {
       print(e);
-      return  'Falha ao se comunicar com o servidor: Erro Interno.';
     }
-    return Future.value(null);
+    throw 'Falha ao se comunicar com o servidor: Erro Interno.';
   }
 
 }
