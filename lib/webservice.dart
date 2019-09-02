@@ -9,7 +9,7 @@ class HTTPRequest {
   Map<String, String> _header = {
     'authorization': '',
     'Content-Type': 'application/json; charset=utf-8',
-    'Accept': 'pplication/json; charset=utf-8'
+    'Accept': 'application/json; charset=utf-8'
   };
 
   HTTPRequest(
