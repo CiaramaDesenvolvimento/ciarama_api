@@ -22,12 +22,13 @@ class HTTPRequest {
 
   http.Request _request(String method, {String body='', String subchild = ''}) {
     var url = join(baseUrl, child);
-    if (subchild != null && subchild.isNotEmpty) url = join(url, '$subchild');
+    if (subchild != null && subchild.isNotEmpty) url = join(url, subchild);
     final req = http.Request(method, Uri.parse(url));
     for (var k in _header.keys) {
       req.headers[k] = _header[k];
     }
     req.body = body;
+    print('REQUEST: $url');
     return req;
   }
 
