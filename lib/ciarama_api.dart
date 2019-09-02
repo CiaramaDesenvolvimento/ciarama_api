@@ -1,0 +1,18 @@
+library ciarama_api;
+export 'webservice.dart';
+export 'globais.dart';
+export 'integrator.dart';
+export 'util.dart';
+
+import 'globais.dart' as globais;
+
+configurar({
+  String ipIntegrator = '187.6.87.118:2626',
+  String ipWebservice = '187.6.87.118:2626',
+  String nomeWebService = ''
+}) {
+  globais.IP_INTEGRATOR = ipIntegrator;
+  globais.IP_WEBSERVICE = ipWebservice;
+  globais.INTEGRATOR = 'http://${globais.IP_INTEGRATOR}/Integrator';
+  globais.WEBSERVICE = 'http://${globais.IP_WEBSERVICE}/$nomeWebService';
+}
