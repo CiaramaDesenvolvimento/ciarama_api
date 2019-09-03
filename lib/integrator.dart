@@ -38,7 +38,7 @@ class UsuarioTipo {
 class Usuario {
   int id;
   String login, nome, email, cpfCnpj, filial,
-    dataCriacao, dataAprovacao, cargo, senha, ativo;
+    dataCriacao, dataAprovacao, cargo, senha, ativo, foto;
 
   List<UsuarioTipo> tipo;
   Map<String, dynamic> colaborador;
@@ -56,7 +56,8 @@ class Usuario {
     this.cargo,
     this.senha,
     this.ativo,
-    this.colaborador
+    this.colaborador,
+    this.foto
   });
 
   factory Usuario.fromJson(Map<String, dynamic> json) {
@@ -73,6 +74,7 @@ class Usuario {
       cargo: json['cargo'],
       senha: json['senha'],
       ativo: json['ativo'],
+      foto: json['foto'],
       colaborador: json.containsKey('colab') ? json['colab'] : null
     );
   }
@@ -91,6 +93,7 @@ class Usuario {
       'senha': senha,
       'tipo': tipo.map((t) => t.toJson()).toList(),
       'ativo': ativo,
+      'foto': foto,
       'colab': colaborador
     };
   }
