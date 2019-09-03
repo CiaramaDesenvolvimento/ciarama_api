@@ -20,7 +20,11 @@ class Persist {
     final fp = File(path);
     if (fp.existsSync()) {
       final dat = await fp.readAsString();
-      _instance._data = json.decode(dat);
+      try {
+        _instance._data = json.decode(dat);
+      } catch (e) {
+        print(e);
+      }
     } else {
       await fp.create(recursive: true);
     }
