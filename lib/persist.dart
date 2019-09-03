@@ -18,11 +18,14 @@ class Persist {
 
     final fp = File(path);
     if (fp.existsSync()) {
-      final dat = await fp.readAsString();
-      try {
-        _instance._data = json.decode(dat);
-      } catch (e) {
-        print(e);
+      final String dat = await fp.readAsString();
+      if (dat.trim().isNotEmpty) {
+        final codec = JsonCodec();
+        try {
+          _instance._data = codec.decode(dat);
+        } catch (e) {
+          print(e);
+        }
       }
     } else {
       await fp.create(recursive: true);
