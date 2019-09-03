@@ -5,6 +5,7 @@ export 'integrator.dart';
 export 'util.dart';
 
 import 'globais.dart' as globais;
+import 'package:timeago/timeago.dart' as timeago;
 
 configurar({
   String ipIntegrator = '187.6.87.118:2626',
@@ -15,4 +16,6 @@ configurar({
   globais.IP_WEBSERVICE = ipWebservice;
   globais.INTEGRATOR = 'http://${globais.IP_INTEGRATOR}/Integrator';
   globais.WEBSERVICE = 'http://${globais.IP_WEBSERVICE}/$nomeWebService';
+  
+  timeago.setLocaleMessages('pt_BR', timeago.PtBrMessages());
 }

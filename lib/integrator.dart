@@ -303,7 +303,7 @@ class Comentarios {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                Text(timeago.format(time), style: TextStyle(color: Colors.grey))
+                Text(timeago.format(time, locale: 'pt_BR'), style: TextStyle(color: Colors.grey))
               ],
             ),
           ],
