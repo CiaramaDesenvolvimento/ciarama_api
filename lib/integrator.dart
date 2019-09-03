@@ -250,7 +250,7 @@ class Comentarios {
     print(ret);
   }
 
-  static Widget renderComment(String osCliente, Comentario cm, { bool useTimeAgo = false }) {
+  static Widget renderComment(ImageProvider pfp, String osCliente, Comentario cm, { bool useTimeAgo = false }) {
     var cargo = cm.autor.cargo;
     if (osCliente == cm.autor.nome) cargo = 'CLIENTE';
 
@@ -284,7 +284,13 @@ class Comentarios {
           children: <Widget>[
             Row(
               children: <Widget>[
-                Icon(Icons.comment, size: 20),
+                Image(
+                  image: pfp,
+                  width: 32.0,
+                  alignment: Alignment.center,
+                  fit: BoxFit.cover,
+                  repeat: ImageRepeat.noRepeat
+                ),
                 SizedBox(width: 10),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

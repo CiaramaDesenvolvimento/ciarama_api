@@ -19,7 +19,6 @@ void main() {
   });
 
   test('Data Format', () {
-    final fmt = DateFormat('yyyyMMddHHmm');
     final dat = '201902041734';
     final dtt = dat.substring(0, 8) + 'T' + dat.substring(8);
     final dt = DateTime.parse(dtt);
