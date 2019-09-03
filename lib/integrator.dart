@@ -284,13 +284,7 @@ class Comentarios {
           children: <Widget>[
             Row(
               children: <Widget>[
-                Image(
-                  image: pfp,
-                  width: 32.0,
-                  alignment: Alignment.center,
-                  fit: BoxFit.cover,
-                  repeat: ImageRepeat.noRepeat
-                ),
+                profileImage(pfp, size: 42),
                 SizedBox(width: 10),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

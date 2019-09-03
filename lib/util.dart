@@ -41,3 +41,23 @@ String formataDataHora(String dataProt) {
   String m = dataProt.substring(10, 12);
   return '$dd/$mm/$yy - $h:$m';
 }
+
+Widget profileImage(ImageProvider image, {double size = 100.0}) {
+  return Container(
+    width: size, height: size,
+    decoration: BoxDecoration(
+      image: DecorationImage(
+        image: image,
+        fit: BoxFit.cover
+      ),
+      borderRadius: BorderRadius.circular(size / 4),
+      boxShadow: <BoxShadow>[
+        BoxShadow(
+          blurRadius: 4.0,
+          offset: Offset(0.0, 2.0),
+          color: Colors.black26
+        )
+      ]
+    ),
+  );
+}
