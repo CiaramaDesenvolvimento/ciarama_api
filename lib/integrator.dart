@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:ciarama_api/util.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:open_file/open_file.dart';
 import 'package:path/path.dart';
@@ -246,7 +247,7 @@ class Comentarios {
     print(ret);
   }
 
-  static Widget renderComment(String osCliente, Comentario cm) {
+  static Widget renderComment(String osCliente, Comentario cm, { bool useTimeAgo = false }) {
     var cargo = cm.autor.cargo;
     if (osCliente == cm.autor.nome) cargo = 'CLIENTE';
 
@@ -303,7 +304,7 @@ class Comentarios {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                Text(timeago.format(time, locale: 'pt_BR'), style: TextStyle(color: Colors.grey))
+                Text(useTimeAgo ? timeago.format(time, locale: 'pt_BR') : formataDataHora(cm.data), style: TextStyle(color: Colors.grey))
               ],
             ),
           ],
