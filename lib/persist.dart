@@ -18,8 +18,14 @@ class Persist {
     _instance._dataFile = path;
 
     final fp = File(path);
-    final dat = await fp.readAsString();
-    _instance._data = json.decode(dat);
+    final exists = await fp.exists();
+
+    if (exists) {
+      final dat = await fp.readAsString();
+      _instance._data = json.decode(dat);
+    } else {
+      await fp.create(recursive: true);
+    }
 
     print(path);
 
