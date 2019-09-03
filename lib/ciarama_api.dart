@@ -3,6 +3,7 @@ export 'webservice.dart';
 export 'globais.dart';
 export 'integrator.dart';
 export 'util.dart';
+export 'persist.dart';
 
 import 'globais.dart' as globais;
 import 'package:timeago/timeago.dart' as timeago;
