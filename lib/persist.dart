@@ -15,7 +15,6 @@ class Persist {
   static Future<Persist> instance(String name) async {
     final dir = await getExternalStorageDirectory();
     final path = join(dir.path, '$name.json');
-    _instance._dataFile = path;
 
     final fp = File(path);
     if (fp.existsSync()) {
@@ -28,18 +27,18 @@ class Persist {
     } else {
       await fp.create(recursive: true);
     }
+    _instance._dataFile = fp;
 
     print(path);
 
     return _instance;
   }
 
-  String _dataFile;
+  File _dataFile;
   Map<String, dynamic> _data = {};
 
   Future commit() async {
-    final fp = File(_dataFile);
-    await fp.writeAsString(json.encode(_data));
+    await _dataFile.writeAsString(json.encode(_data));
   }
 
   delete(String key) {
