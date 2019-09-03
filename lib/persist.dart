@@ -18,9 +18,7 @@ class Persist {
     _instance._dataFile = path;
 
     final fp = File(path);
-    final exists = await fp.exists();
-
-    if (exists) {
+    if (fp.existsSync()) {
       final dat = await fp.readAsString();
       _instance._data = json.decode(dat);
     } else {
