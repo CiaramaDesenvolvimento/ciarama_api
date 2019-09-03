@@ -3,7 +3,8 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
-import 'package:ciarama_api/util.dart';
+import 'package:timeago/timeago.dart' as timeago;
+import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path/path.dart';
 import 'package:ciarama_api/webservice.dart';
@@ -250,6 +251,9 @@ class Comentarios {
     var cargo = cm.autor.cargo;
     if (osCliente == cm.autor.nome) cargo = 'CLIENTE';
 
+    final fmt = DateFormat('yyyyMMddHHmm');
+    final time = fmt.parse(cm.data);
+
     final List<Widget> imgs = cm.fotos.map((dt) {
       final dat = base64.decode(dt);
       final img = MemoryImage(dat);
@@ -300,7 +304,7 @@ class Comentarios {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                Text(formataDataHora(cm.data), style: TextStyle(color: Colors.grey))
+                Text(timeago.format(time), style: TextStyle(color: Colors.grey))
               ],
             ),
           ],
