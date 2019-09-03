@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path/path.dart';
 import 'package:ciarama_api/webservice.dart';
@@ -251,8 +250,8 @@ class Comentarios {
     var cargo = cm.autor.cargo;
     if (osCliente == cm.autor.nome) cargo = 'CLIENTE';
 
-    final fmt = DateFormat('yyyyMMddHHmm');
-    final time = fmt.parse(cm.data);
+    final dtt = cm.data.substring(0, 8) + 'T' + cm.data.substring(8);
+    final time = DateTime.parse(dtt);
 
     final List<Widget> imgs = cm.fotos.map((dt) {
       final dat = base64.decode(dt);
