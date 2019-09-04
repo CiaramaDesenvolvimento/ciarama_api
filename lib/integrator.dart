@@ -181,7 +181,7 @@ class Comentarios {
           return obj.map((v) => Comentario.fromJson(v)).toList();
         }
       } else {
-        print(res.body);
+        throw res.body;
       }
     } catch (e) {
       print(e);
@@ -200,6 +200,8 @@ class Comentarios {
       if (res.statusCode == 200) {
         final obj = json.decode(res.body);
         return Comentario.fromJson(obj);
+      } else {
+        throw res.body;
       }
     } catch (e) {
       print(e);
@@ -231,8 +233,8 @@ class Comentarios {
       }
     } catch (e) {
       print(e);
+      throw 'Falha ao se comunicar com o servidor.';
     }
-    throw 'Falha ao se comunicar com o servidor.';
   }
 
   // INTERFACE
@@ -332,6 +334,7 @@ class Credenciamento {
       }
     } catch (e) {
       print(e);
+      throw 'Falha ao se comunicar com o servidor.';
     }
     return Future.value(null);
   }
@@ -351,14 +354,16 @@ class Credenciamento {
       final res = await ireq.get();
       if (res.statusCode == 200) {
         return Usuario.fromJson(json.decode(res.body));
+      } else {
+        throw res.body;
       }
     } catch (e) {
       print(e);
+      throw 'Falha ao se comunicar com o servidor.';
     }
-    return Future.value(null);
   }
 
-  static Future<String> registrarCliente(String email, String cpfCnpj, String login, String senha) async {
+  static registrarCliente(String email, String cpfCnpj, String login, String senha) async {
 		final client = HTTPRequest(
       globais.INTEGRATOR,
       child: 'usuarios/cc',
@@ -375,16 +380,15 @@ class Credenciamento {
       );
       if (res.statusCode == 200) {
         final note = res.body.trim();
-        return note;
+        throw note;
       }
     } catch (e) {
       print(e);
-		  return 'Falha ao se comunicar com o servidor.';
+		  throw 'Falha ao se comunicar com o servidor.';
     }
-    return Future.value(null);
   }
 
-  static Future<String> registrarFuncionario(String email, String matricula, String filial, String login, String senha) async {
+  static registrarFuncionario(String email, String matricula, String filial, String login, String senha) async {
 		final client = HTTPRequest(
       globais.INTEGRATOR,
       child: 'usuarios/cf',
@@ -402,16 +406,15 @@ class Credenciamento {
       );
       if (res.statusCode == 200) {
         final note = res.body.trim();
-        return note;
+        throw note;
       }
     } catch (e) {
       print(e);
-		  return 'Falha ao se comunicar com o servidor.';
+		  throw 'Falha ao se comunicar com o servidor.';
     }
-    return Future.value(null);
   }
 
-  static Future<String> alteraSenha(Usuario user, String senhaNova) async {
+  static alteraSenha(Usuario user, String senhaNova) async {
     final client = HTTPRequest(
       globais.INTEGRATOR,
       child: 'alterar/${user.cpfCnpj}/$senhaNova',
@@ -420,10 +423,8 @@ class Credenciamento {
 
     try {
       final res = await client.put();
-      if (res.statusCode == 200) {
-        return Future.value(null);
-      } else {
-        throw 'Não foi possível alterar sua senha.';
+      if (res.statusCode != 200) {
+        throw 'Não foi possível alterar sua senha. ${res.body}';
       }
     } catch (e) {
       print(e);
@@ -601,8 +602,8 @@ class Agendamentos {
       }
     } catch (e) {
       print(e);
+      throw 'Falha ao se comunicar com o servidor: Erro interno.';
     }
-    throw 'Falha ao se comunicar com o servidor: Erro interno.';
   }
 
   static Future<String> solicitar(SolicitacaoBase sol) async {
@@ -614,14 +615,14 @@ class Agendamentos {
     try {
       final res = await client.post(body: json.encode(sol.toJson()));
       if (res.statusCode == 200) return res.body;
-      else                       return Future.value(null);
+      else                       throw res.body;
     } catch (e) {
       print(e);
+      throw 'Falha ao se comunicar com o servidor: Erro Interno.';
     }
-    throw 'Falha ao se comunicar com o servidor: Erro Interno.';
   }
 
-  static Future<String> agendar(String sol, Agendamento age) async {
+  static agendar(String sol, Agendamento age) async {
     final client = HTTPRequest(
       globais.INTEGRATOR,
       child: 'agendamento/agendar/$sol',
@@ -630,14 +631,13 @@ class Agendamentos {
     try {
       final res = await client.put(body: json.encode(age.toJson()));
       if (res.statusCode != 200) throw res.body;
-      else return Future.value(null);
     } catch (e) {
       print(e);
+      throw 'Falha ao se comunicar com o servidor: Erro Interno.';
     }
-    throw 'Falha ao se comunicar com o servidor: Erro Interno.';
   }
 
-  static Future<String> finalizar(String sol, String os) async {
+  static finalizar(String sol, String os) async {
     final client = HTTPRequest(
       globais.INTEGRATOR,
       child: 'agendamento/finalizar/$sol/$os',
@@ -646,11 +646,10 @@ class Agendamentos {
     try {
       final res = await client.put();
       if (res.statusCode != 200) throw res.body;
-      else return Future.value(null);
     } catch (e) {
       print(e);
+      throw 'Falha ao se comunicar com o servidor: Erro Interno.';
     }
-    throw 'Falha ao se comunicar com o servidor: Erro Interno.';
   }
 
 }
