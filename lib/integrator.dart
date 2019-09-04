@@ -375,16 +375,13 @@ class Credenciamento {
       );
       if (res.statusCode == 200) {
         final note = res.body.trim();
-        if (note.isEmpty) {
-          return 'Cadastro realizado com sucesso. Um e-mail de confirmação foi enviado para $email. Caso este não seja seu e-mail, solicite uma atualização de cadastro.';
-        } else {
-          throw note;
-        }
+        return note;
       }
     } catch (e) {
       print(e);
+		  return 'Falha ao se comunicar com o servidor.';
     }
-		throw 'Falha ao se comunicar com o servidor.';
+    return Future.value(null);
   }
 
   static Future<String> registrarFuncionario(String email, String matricula, String filial, String login, String senha) async {
@@ -405,16 +402,13 @@ class Credenciamento {
       );
       if (res.statusCode == 200) {
         final note = res.body.trim();
-        if (note.isEmpty) {
-          return 'Cadastro realizado com sucesso. Um e-mail de confirmação foi enviado para $email. Caso este não seja seu e-mail, solicite uma atualização de cadastro.';
-        } else {
-          throw note;
-        }
+        return note;
       }
     } catch (e) {
       print(e);
+		  return 'Falha ao se comunicar com o servidor.';
     }
-		throw 'Falha ao se comunicar com o servidor.';
+    return Future.value(null);
   }
 
   static Future<String> alteraSenha(Usuario user, String senhaNova) async {
