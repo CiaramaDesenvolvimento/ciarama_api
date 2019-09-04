@@ -61,3 +61,28 @@ Widget profileImage(ImageProvider image, {double size = 100.0}) {
     ),
   );
 }
+
+class Result<V, E> {
+  E _error;
+  V _value;
+
+  Result._({ E error, V value }) {
+    _error = error;
+    _value = value;
+  }
+
+  factory Result.err(E error) {
+    return Result._(error: error);
+  }
+
+  factory Result.ok(V value) {
+    return Result._(value: value);
+  }
+
+  bool get isError => (_error != null);
+  bool get isOk => (_value != null);
+
+  V get value => _value;
+  E get error => _error;
+
+}

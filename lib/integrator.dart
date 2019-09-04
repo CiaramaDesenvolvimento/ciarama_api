@@ -167,41 +167,44 @@ class Comentarios {
     return Response.fromStream(await req.send());
   }
 
-  static Future<List<Comentario>> listar(String os, String filial) async {
+  static Future<Result<List<Comentario>, String>> listar(String os, String filial) async {
     final client = HTTPRequest(
       globais.INTEGRATOR,
       child: 'comentario/$os/$filial',
       auth: basicAuth('CiaramaRM', 'C14r4m4')
     );
     final res = await client.get();
-    if (res.statusCode == 200) {
-      final obj = json.decode(res.body);
-      if (obj is List) {
-        return obj.map((v) => Comentario.fromJson(v)).toList();
-      }
-    } else {
-      throw res.body;
+    if (res == null) {
+      return Result.err('Falha ao se comunicar com o servidor.');
     }
-    return Future.value(null);
+    
+    if (res.statusCode == 200) {
+      return Result.ok(parseJson(res.body, (v) => Comentario.fromJson(v)));
+    } else {
+      return Result.err(res.body);
+    }
   }
 
-  static Future<Comentario> ultimo(String os, String filial) async {
+  static Future<Result<Comentario, String>> ultimo(String os, String filial) async {
     final client = HTTPRequest(
       globais.INTEGRATOR,
       child: 'comentario/ult/$os/$filial',
       auth: basicAuth('CiaramaRM', 'C14r4m4')
     );
     final res = await client.get();
+    if (res == null) {
+      return Result.err('Falha ao se comunicar com o servidor.');
+    }
+
     if (res.statusCode == 200) {
       final obj = json.decode(res.body);
-      return Comentario.fromJson(obj);
+      return Result.ok(Comentario.fromJson(obj));
     } else {
-      throw res.body;
+      return Result.err(res.body);
     }
-    return Future.value(null);
   }
 
-  static Future<String> comentar(int usid, String os, String filial, String comentario, List<File> imagens) async {
+  static Future<Result<int, String>> comentar(int usid, String os, String filial, String comentario, List<File> imagens) async {
     final client = HTTPRequest(
       globais.INTEGRATOR,
       child: 'comentario',
@@ -215,12 +218,16 @@ class Comentarios {
         'comentario': comentario
       })
     );
+    if (res == null) {
+      return Result.err('Falha ao se comunicar com o servidor.');
+    }
+
     if (res.statusCode != 200) {
-      throw res.body;
+      return Result.err(res.body);
     } else {
       final cmid = int.parse(res.body);
       await Future.wait(imagens.map((im) => uploadFoto(im, cmid)));
-      return res.body;
+      return Result.ok(cmid);
     }
   }
 
@@ -315,6 +322,10 @@ class Credenciamento {
       auth: basicAuth('CiaramaRM', 'C14r4m4')
     );
     final res = await client.get();
+    if (res == null) {
+      return Future.value(null);
+    }
+
     if (res.statusCode == 200) {
       return res.body;
     }
@@ -326,21 +337,25 @@ class Credenciamento {
     return Future.value(null);
   }
 
-  static Future<Usuario> login(String nome, String senha, { String filial = '*' }) async {
+  static Future<Result<Usuario, String>> login(String nome, String senha, { String filial = '*' }) async {
     final ireq = HTTPRequest(
       globais.INTEGRATOR,
       child: 'login/$nome/$senha/$filial',
       auth: basicAuth('CiaramaRM', 'C14r4m4')
     );
     final res = await ireq.get();
+    if (res == null) {
+      return Result.err('Falha ao se comunicar com o servidor.');
+    }
+
     if (res.statusCode == 200) {
-      return Usuario.fromJson(json.decode(res.body));
+      return Result.ok(Usuario.fromJson(json.decode(res.body)));
     } else {
-      throw res.body;
+      return Result.err(res.body);
     }
   }
 
-  static registrarCliente(String email, String cpfCnpj, String login, String senha) async {
+  static Future<Result<String, String>> registrarCliente(String email, String cpfCnpj, String login, String senha) async {
 		final client = HTTPRequest(
       globais.INTEGRATOR,
       child: 'usuarios/cc',
@@ -354,13 +369,18 @@ class Credenciamento {
         'senha': senha
       })
     );
+    if (res == null) {
+      return Result.err('Falha ao se comunicar com o servidor.');
+    }
+  
     if (res.statusCode != 200) {
-      final note = res.body.trim();
-      throw note;
+      return Result.err(res.body.trim());
+    } else {
+      return Result.ok(res.body.trim());
     }
   }
 
-  static registrarFuncionario(String email, String matricula, String filial, String login, String senha) async {
+  static Future<Result<String, String>> registrarFuncionario(String email, String matricula, String filial, String login, String senha) async {
 		final client = HTTPRequest(
       globais.INTEGRATOR,
       child: 'usuarios/cf',
@@ -375,13 +395,18 @@ class Credenciamento {
         'senha': senha
       })
     );
+    if (res == null) {
+      return Result.err('Falha ao se comunicar com o servidor.');
+    }
+
     if (res.statusCode != 200) {
-      final note = res.body.trim();
-      throw note;
+      return Result.err(res.body.trim());
+    } else {
+      return Result.ok(res.body.trim());
     }
   }
 
-  static alteraSenha(Usuario user, String senhaNova) async {
+  static Future<Result<String, String>> alteraSenha(Usuario user, String senhaNova) async {
     final client = HTTPRequest(
       globais.INTEGRATOR,
       child: 'alterar/${user.cpfCnpj}/$senhaNova',
@@ -389,8 +414,14 @@ class Credenciamento {
     );
 
     final res = await client.put();
+    if (res == null) {
+      return Result.err('Falha ao se comunicar com o servidor.');
+    }
+
     if (res.statusCode != 200) {
-      throw 'Não foi possível alterar sua senha. ${res.body}';
+      return Result.err('Não foi possível alterar sua senha. ${res.body}');
+    } else {
+      return Result.ok('Senha alterada com sucesso. Para sua segurança, sua conta foi desativada e um e-mail de confirmação foi enviado para reativação.');
     }
   }
 }
@@ -549,39 +580,52 @@ class Agendamento {
 }
 
 class Agendamentos {
-  static Future<List<Solicitacao>> listar() async {
+  static Future<Result<List<Solicitacao>, String>> listar() async {
     final client = HTTPRequest(
       globais.INTEGRATOR,
       child: 'agendamento',
       auth: basicAuth('CiaramaRM', 'C14r4m4')
     );
     final res = await client.get();
+    if (res == null) {
+      return Result.err('Falha ao se comunicar com o servidor.');
+    }
+
     if (res.statusCode == 200) {
-      return parseJson(res.body, (v) => Solicitacao.fromJson(v));
+      return Result.ok(parseJson(res.body, (v) => Solicitacao.fromJson(v)));
     } else {
-      throw res.body;
+      return Result.err(res.body);
     }
   }
 
-  static Future<String> solicitar(SolicitacaoBase sol) async {
+  static Future<Result<String, String>> solicitar(SolicitacaoBase sol) async {
     final client = HTTPRequest(
       globais.INTEGRATOR,
       child: 'agendamento/solicitar',
       auth: basicAuth('CiaramaRM', 'C14r4m4')
     );
     final res = await client.post(body: json.encode(sol.toJson()));
-    if (res.statusCode == 200) return res.body;
-    else                       throw res.body;
+    if (res == null) {
+      return Result.err('Falha ao se comunicar com o servidor.');
+    }
+
+    if (res.statusCode == 200) return Result.ok(res.body);
+    else                       return Result.err(res.body);
   }
 
-  static agendar(String sol, Agendamento age) async {
+  static Future<Result<String, String>> agendar(String sol, Agendamento age) async {
     final client = HTTPRequest(
       globais.INTEGRATOR,
       child: 'agendamento/agendar/$sol',
       auth: basicAuth('CiaramaRM', 'C14r4m4')
     );
     final res = await client.put(body: json.encode(age.toJson()));
-    if (res.statusCode != 200) throw res.body;
+    if (res == null) {
+      return Result.err('Falha ao se comunicar com o servidor.');
+    }
+
+    if (res.statusCode != 200) return Result.err(res.body);
+    return Result.ok('');
   }
 
   static finalizar(String sol, String os) async {
@@ -592,7 +636,12 @@ class Agendamentos {
     );
     
     final res = await client.put();
-    if (res.statusCode != 200) throw res.body;
+    if (res == null) {
+      return Result.err('Falha ao se comunicar com o servidor.');
+    }
+
+    if (res.statusCode != 200) return Result.err(res.body);
+    return Result.ok('');
   }
 
 }
