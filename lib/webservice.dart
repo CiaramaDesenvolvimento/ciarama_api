@@ -37,7 +37,8 @@ class HTTPRequest {
       final req = _request('GET', subchild: subchild);
       return http.Response.fromStream(await req.send());
     } catch (e) {
-      return Future.error('Falha ao se comunicar com o servidor. $e');
+      print('Falha ao se comunicar com o servidor. $e');
+      return Future.value(null);
     }
   }
 
@@ -46,7 +47,8 @@ class HTTPRequest {
       final req = _request('POST', body: body == null ? '' : body, subchild: subchild);
       return http.Response.fromStream(await req.send());
     } catch (e) {
-      return Future.error('Falha ao se comunicar com o servidor. $e');
+      print('Falha ao se comunicar com o servidor. $e');
+      return Future.value(null);
     }
   }
 
@@ -55,7 +57,8 @@ class HTTPRequest {
       final req = _request('PUT', body: body == null ? '' : body, subchild: subchild);
       return http.Response.fromStream(await req.send());
     } catch (e) {
-      return Future.error('Falha ao se comunicar com o servidor. $e');
+      print('Falha ao se comunicar com o servidor. $e');
+      return Future.value(null);
     }
   }
 }
