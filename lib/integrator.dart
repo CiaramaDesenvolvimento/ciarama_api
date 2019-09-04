@@ -16,21 +16,23 @@ import 'globais.dart' as globais;
 
 /// Usuario
 class UsuarioTipo {
-  String tipo, codMat;
+  String tipo, codMat, foto;
 
-  UsuarioTipo({this.tipo, this.codMat});
+  UsuarioTipo({this.tipo, this.codMat, this.foto});
 
   factory UsuarioTipo.fromJson(Map<String, dynamic> json) {
     return UsuarioTipo(
       codMat: json['codMat'],
-      tipo: json['tipo']
+      tipo: json['tipo'],
+      foto: json['foto']
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'codMat': codMat,
-      'tipo': tipo
+      'tipo': tipo,
+      'foto': foto
     };
   }
 }
@@ -38,7 +40,7 @@ class UsuarioTipo {
 class Usuario {
   int id;
   String login, nome, email, cpfCnpj, filial,
-    dataCriacao, dataAprovacao, cargo, senha, ativo, foto;
+    dataCriacao, dataAprovacao, cargo, senha, ativo;
 
   List<UsuarioTipo> tipo;
   Map<String, dynamic> colaborador;
@@ -56,8 +58,7 @@ class Usuario {
     this.cargo,
     this.senha,
     this.ativo,
-    this.colaborador,
-    this.foto
+    this.colaborador
   });
 
   factory Usuario.fromJson(Map<String, dynamic> json) {
@@ -74,7 +75,6 @@ class Usuario {
       cargo: json['cargo'],
       senha: json['senha'],
       ativo: json['ativo'],
-      foto: json['foto'],
       colaborador: json.containsKey('colab') ? json['colab'] : null
     );
   }
@@ -93,7 +93,6 @@ class Usuario {
       'senha': senha,
       'tipo': tipo.map((t) => t.toJson()).toList(),
       'ativo': ativo,
-      'foto': foto,
       'colab': colaborador
     };
   }
