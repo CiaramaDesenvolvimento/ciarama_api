@@ -173,18 +173,14 @@ class Comentarios {
       child: 'comentario/$os/$filial',
       auth: basicAuth('CiaramaRM', 'C14r4m4')
     );
-    try {
-      final res = await client.get();
-      if (res.statusCode == 200) {
-        final obj = json.decode(res.body);
-        if (obj is List) {
-          return obj.map((v) => Comentario.fromJson(v)).toList();
-        }
-      } else {
-        throw res.body;
+    final res = await client.get();
+    if (res.statusCode == 200) {
+      final obj = json.decode(res.body);
+      if (obj is List) {
+        return obj.map((v) => Comentario.fromJson(v)).toList();
       }
-    } catch (e) {
-      print(e);
+    } else {
+      throw res.body;
     }
     return Future.value(null);
   }
@@ -195,16 +191,12 @@ class Comentarios {
       child: 'comentario/ult/$os/$filial',
       auth: basicAuth('CiaramaRM', 'C14r4m4')
     );
-    try {
-      final res = await client.get();
-      if (res.statusCode == 200) {
-        final obj = json.decode(res.body);
-        return Comentario.fromJson(obj);
-      } else {
-        throw res.body;
-      }
-    } catch (e) {
-      print(e);
+    final res = await client.get();
+    if (res.statusCode == 200) {
+      final obj = json.decode(res.body);
+      return Comentario.fromJson(obj);
+    } else {
+      throw res.body;
     }
     return Future.value(null);
   }
@@ -215,25 +207,20 @@ class Comentarios {
       child: 'comentario',
       auth: basicAuth('CiaramaRM', 'C14r4m4')
     );
-    try {
-      final res = await client.post(
-        body: json.encode({
-          'usuario': usid,
-          'os': os,
-          'filial': filial,
-          'comentario': comentario
-        })
-      );
-      if (res.statusCode != 200) {
-        throw res.body;
-      } else {
-        final cmid = int.parse(res.body);
-        await Future.wait(imagens.map((im) => uploadFoto(im, cmid)));
-        return res.body;
-      }
-    } catch (e) {
-      print(e);
-      throw 'Falha ao se comunicar com o servidor.';
+    final res = await client.post(
+      body: json.encode({
+        'usuario': usid,
+        'os': os,
+        'filial': filial,
+        'comentario': comentario
+      })
+    );
+    if (res.statusCode != 200) {
+      throw res.body;
+    } else {
+      final cmid = int.parse(res.body);
+      await Future.wait(imagens.map((im) => uploadFoto(im, cmid)));
+      return res.body;
     }
   }
 
@@ -327,14 +314,9 @@ class Credenciamento {
       child: 'foto_cliente/$cod',
       auth: basicAuth('CiaramaRM', 'C14r4m4')
     );
-    try {
-      final res = await client.get();
-      if (res.statusCode == 200) {
-        return res.body;
-      }
-    } catch (e) {
-      print(e);
-      throw 'Falha ao se comunicar com o servidor.';
+    final res = await client.get();
+    if (res.statusCode == 200) {
+      return res.body;
     }
     return Future.value(null);
   }
@@ -350,16 +332,11 @@ class Credenciamento {
       child: 'login/$nome/$senha/$filial',
       auth: basicAuth('CiaramaRM', 'C14r4m4')
     );
-    try {
-      final res = await ireq.get();
-      if (res.statusCode == 200) {
-        return Usuario.fromJson(json.decode(res.body));
-      } else {
-        throw res.body;
-      }
-    } catch (e) {
-      print(e);
-      throw 'Falha ao se comunicar com o servidor.';
+    final res = await ireq.get();
+    if (res.statusCode == 200) {
+      return Usuario.fromJson(json.decode(res.body));
+    } else {
+      throw res.body;
     }
   }
 
@@ -370,21 +347,16 @@ class Credenciamento {
       auth: basicAuth('CiaramaRM', 'C14r4m4')
     );
 
-    try {
-      final res = await client.post(
-        body: json.encode({
-          'cpfCnpj': cpfCnpj,
-          'login': login,
-          'senha': senha
-        })
-      );
-      if (res.statusCode == 200) {
-        final note = res.body.trim();
-        throw note;
-      }
-    } catch (e) {
-      print(e);
-		  throw 'Falha ao se comunicar com o servidor.';
+    final res = await client.post(
+      body: json.encode({
+        'cpfCnpj': cpfCnpj,
+        'login': login,
+        'senha': senha
+      })
+    );
+    if (res.statusCode != 200) {
+      final note = res.body.trim();
+      throw note;
     }
   }
 
@@ -395,22 +367,17 @@ class Credenciamento {
       auth: basicAuth('CiaramaRM', 'C14r4m4')
     );
 
-    try {
-      final res = await client.post(
-        body: json.encode({
-          'matricula': matricula,
-          'filial': filial,
-          'login': login,
-          'senha': senha
-        })
-      );
-      if (res.statusCode == 200) {
-        final note = res.body.trim();
-        throw note;
-      }
-    } catch (e) {
-      print(e);
-		  throw 'Falha ao se comunicar com o servidor.';
+    final res = await client.post(
+      body: json.encode({
+        'matricula': matricula,
+        'filial': filial,
+        'login': login,
+        'senha': senha
+      })
+    );
+    if (res.statusCode != 200) {
+      final note = res.body.trim();
+      throw note;
     }
   }
 
@@ -421,14 +388,9 @@ class Credenciamento {
       auth: basicAuth('CiaramaRM', 'C14r4m4')
     );
 
-    try {
-      final res = await client.put();
-      if (res.statusCode != 200) {
-        throw 'Não foi possível alterar sua senha. ${res.body}';
-      }
-    } catch (e) {
-      print(e);
-      throw 'Não foi possível alterar sua senha. Falha ao se comunicar com o servidor.';
+    final res = await client.put();
+    if (res.statusCode != 200) {
+      throw 'Não foi possível alterar sua senha. ${res.body}';
     }
   }
 }
@@ -593,16 +555,11 @@ class Agendamentos {
       child: 'agendamento',
       auth: basicAuth('CiaramaRM', 'C14r4m4')
     );
-    try {
-      final res = await client.get();
-      if (res.statusCode == 200) {
-        return parseJson(res.body, (v) => Solicitacao.fromJson(v));
-      } else {
-        throw res.body;
-      }
-    } catch (e) {
-      print(e);
-      throw 'Falha ao se comunicar com o servidor: Erro interno.';
+    final res = await client.get();
+    if (res.statusCode == 200) {
+      return parseJson(res.body, (v) => Solicitacao.fromJson(v));
+    } else {
+      throw res.body;
     }
   }
 
@@ -612,14 +569,9 @@ class Agendamentos {
       child: 'agendamento/solicitar',
       auth: basicAuth('CiaramaRM', 'C14r4m4')
     );
-    try {
-      final res = await client.post(body: json.encode(sol.toJson()));
-      if (res.statusCode == 200) return res.body;
-      else                       throw res.body;
-    } catch (e) {
-      print(e);
-      throw 'Falha ao se comunicar com o servidor: Erro Interno.';
-    }
+    final res = await client.post(body: json.encode(sol.toJson()));
+    if (res.statusCode == 200) return res.body;
+    else                       throw res.body;
   }
 
   static agendar(String sol, Agendamento age) async {
@@ -628,13 +580,8 @@ class Agendamentos {
       child: 'agendamento/agendar/$sol',
       auth: basicAuth('CiaramaRM', 'C14r4m4')
     );
-    try {
-      final res = await client.put(body: json.encode(age.toJson()));
-      if (res.statusCode != 200) throw res.body;
-    } catch (e) {
-      print(e);
-      throw 'Falha ao se comunicar com o servidor: Erro Interno.';
-    }
+    final res = await client.put(body: json.encode(age.toJson()));
+    if (res.statusCode != 200) throw res.body;
   }
 
   static finalizar(String sol, String os) async {
@@ -643,13 +590,9 @@ class Agendamentos {
       child: 'agendamento/finalizar/$sol/$os',
       auth: basicAuth('CiaramaRM', 'C14r4m4')
     );
-    try {
-      final res = await client.put();
-      if (res.statusCode != 200) throw res.body;
-    } catch (e) {
-      print(e);
-      throw 'Falha ao se comunicar com o servidor: Erro Interno.';
-    }
+    
+    final res = await client.put();
+    if (res.statusCode != 200) throw res.body;
   }
 
 }
