@@ -11,6 +11,17 @@ final Filiais = {
   '010107': 'Laguna Carapã'
 };
 
+final Equipamentos = {
+  'TR': 'Trator',
+  'PL': 'Plantadeira',
+  'PV': 'Pulverizador',
+  'PC': 'Plataforma de Corte',
+  'PM': 'Plataforma de Milho',
+  'CA': 'Colheitadeira',
+  'CH': 'Colhedeira de Cana',
+  'TRJD': 'Trator de Jardim',
+};
+
 openURL(BuildContext context, String url, {String alt}) async {
 	if (await canLaunch(url)) {
 		await launch(url);
