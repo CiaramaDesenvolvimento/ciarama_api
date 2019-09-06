@@ -71,7 +71,7 @@ class Usuario {
       filial: json['filial'],
       dataAprovacao: json['dataAprovacao'],
       dataCriacao: json['dataCriacao'],
-      tipo: (json['tipo'] as List).map((t) => UsuarioTipo.fromJson(t)).toList(),
+      tipo: json['tipo'] != null ? (json['tipo'] as List).map((t) => UsuarioTipo.fromJson(t)).toList() : null,
       cargo: json['cargo'],
       senha: json['senha'],
       ativo: json['ativo'],
@@ -95,6 +95,10 @@ class Usuario {
       'ativo': ativo,
       'colab': colaborador
     };
+  }
+
+  bool valido() {
+    return dataAprovacao != null && dataCriacao != null && tipo != null;
   }
 
   UsuarioTipo getTipo(String tipo) {
