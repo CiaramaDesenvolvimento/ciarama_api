@@ -433,11 +433,10 @@ class Solicitacao {
   String num, filial, status, urgencia, equipamento,
 					modelo, chassi, problema, dataSolicitacao,
 					horaSolicitacao, dataAtendimento, horaAtendimento,
-					tecnicoNome, tecnicoProdutivo, observacaoRetorno,
-					numOS;
+					observacaoRetorno, numOS;
 	int horimetro;
 	
-	Usuario cliente;
+	Usuario cliente, tecnico;
 	List<Comentario> comentarios;
 
   Solicitacao({
@@ -453,8 +452,7 @@ class Solicitacao {
     this.horaSolicitacao,
     this.dataAtendimento,
     this.horaAtendimento,
-    this.tecnicoNome,
-    this.tecnicoProdutivo,
+    this.tecnico,
     this.observacaoRetorno,
     this.numOS,
     this.horimetro,
@@ -476,8 +474,7 @@ class Solicitacao {
       horaSolicitacao: json['horaSolicitacao'],
       dataAtendimento: json['dataAtendimento'],
       horaAtendimento: json['horaAtendimento'],
-      tecnicoNome: json['tecnicoNome'],
-      tecnicoProdutivo: json['tecnicoProdutivo'],
+      tecnico: json['tecnico'] != null ? Usuario.fromJson(json['tecnico']) : null,
       observacaoRetorno: json['observacaoRetorno'],
       numOS: json['numOS'],
       horimetro: json['horimetro'],
@@ -500,8 +497,7 @@ class Solicitacao {
       'horaSolicitacao': horaSolicitacao,
       'dataAtendimento': dataAtendimento,
       'horaAtendimento': horaAtendimento,
-      'tecnicoNome': tecnicoNome,
-      'tecnicoProdutivo': tecnicoProdutivo,
+      'tecnico': tecnico != null ? tecnico.toJson() : null,
       'observacaoRetorno': observacaoRetorno,
       'numOS': numOS,
       'horimetro': horimetro,
@@ -556,26 +552,23 @@ class SolicitacaoBase {
 }
 
 class Agendamento {
-  String tecnicoNome, tecnicoProdutivo, observacaoRetorno;
+  String tecnicoCPF, observacaoRetorno;
 
   Agendamento({
-    this.tecnicoNome,
-    this.tecnicoProdutivo,
+    this.tecnicoCPF,
     this.observacaoRetorno
   });
 
   factory Agendamento.fromJson(Map<String, dynamic> json) {
     return Agendamento(
-      tecnicoNome: json['tecnicoNome'],
-      tecnicoProdutivo: json['tecnicoProdutivo'],
+      tecnicoCPF: json['tecnicoCPF'],
       observacaoRetorno: json['observacaoRetorno']
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'tecnicoNome': tecnicoNome,
-      'tecnicoProdutivo': tecnicoProdutivo,
+      'tecnicoCPF': tecnicoCPF,
       'observacaoRetorno': observacaoRetorno
     };
   }
