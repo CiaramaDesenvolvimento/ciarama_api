@@ -552,24 +552,30 @@ class SolicitacaoBase {
 }
 
 class Agendamento {
-  String tecnicoCPF, observacaoRetorno;
+  String tecnicoCPF, observacaoRetorno, dataAtendimento, horaAtendimento;
 
   Agendamento({
     this.tecnicoCPF,
-    this.observacaoRetorno
+    this.observacaoRetorno,
+    this.dataAtendimento,
+    this.horaAtendimento
   });
 
   factory Agendamento.fromJson(Map<String, dynamic> json) {
     return Agendamento(
       tecnicoCPF: json['tecnicoCPF'],
-      observacaoRetorno: json['observacaoRetorno']
+      observacaoRetorno: json['observacaoRetorno'],
+      dataAtendimento: json['dataAtendimento'],
+      horaAtendimento: json['horaAtendimento']
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'tecnicoCPF': tecnicoCPF,
-      'observacaoRetorno': observacaoRetorno
+      'observacaoRetorno': observacaoRetorno,
+      'dataAtendimento': dataAtendimento,
+      'horaAtendimento': horaAtendimento
     };
   }
 
