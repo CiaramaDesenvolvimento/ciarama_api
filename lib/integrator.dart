@@ -433,7 +433,7 @@ class Solicitacao {
   String num, filial, status, urgencia, equipamento,
 					modelo, chassi, problema, dataSolicitacao,
 					horaSolicitacao, dataAtendimento, horaAtendimento,
-					observacaoRetorno, numOS;
+					observacaoRetorno, numOS, osFilial;
 	int horimetro;
 	
 	Usuario cliente, tecnico;
@@ -455,6 +455,7 @@ class Solicitacao {
     this.tecnico,
     this.observacaoRetorno,
     this.numOS,
+    this.osFilial,
     this.horimetro,
     this.cliente,
     this.comentarios
@@ -477,6 +478,7 @@ class Solicitacao {
       tecnico: json['tecnico'] != null ? Usuario.fromJson(json['tecnico']) : null,
       observacaoRetorno: json['observacaoRetorno'],
       numOS: json['numOS'],
+      osFilial: json['OSFilial'],
       horimetro: json['horimetro'],
       cliente: Usuario.fromJson(json['cliente']),
       comentarios: json['comentarios'] != null ? (json['comentarios'] as List).map((v) => Comentario.fromJson(v)).toList() : []
@@ -500,6 +502,7 @@ class Solicitacao {
       'tecnico': tecnico != null ? tecnico.toJson() : null,
       'observacaoRetorno': observacaoRetorno,
       'numOS': numOS,
+      'OSFilial': osFilial,
       'horimetro': horimetro,
       'cliente': cliente.toJson(),
       'comentarios': comentarios.map((c) => c.toJson()).toList()
