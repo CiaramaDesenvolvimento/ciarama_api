@@ -478,7 +478,7 @@ class Solicitacao {
       tecnico: json['tecnico'] != null ? Usuario.fromJson(json['tecnico']) : null,
       observacaoRetorno: json['observacaoRetorno'],
       numOS: json['numOS'],
-      osFilial: json['OSFilial'],
+      osFilial: json['osfilial'],
       horimetro: json['horimetro'],
       cliente: Usuario.fromJson(json['cliente']),
       comentarios: json['comentarios'] != null ? (json['comentarios'] as List).map((v) => Comentario.fromJson(v)).toList() : []
@@ -502,7 +502,7 @@ class Solicitacao {
       'tecnico': tecnico != null ? tecnico.toJson() : null,
       'observacaoRetorno': observacaoRetorno,
       'numOS': numOS,
-      'OSFilial': osFilial,
+      'osfilial': osFilial,
       'horimetro': horimetro,
       'cliente': cliente.toJson(),
       'comentarios': comentarios.map((c) => c.toJson()).toList()
