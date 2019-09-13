@@ -16,9 +16,10 @@ class Mensagem {
   });
 
   factory Mensagem.formJson(Map<String, dynamic> json) {
+    final dados = json.containsKey('dados') ? json['dados'] : null;
     return Mensagem(
       appID: json.containsKey('appID') ? json['appID'] : null,
-      dados: json.containsKey('dados') ? base64.decode(json['dados']) : null,
+      dados: dados != null ? base64.decode(dados) : null,
       tipo: json['tipo']
     );
   }
