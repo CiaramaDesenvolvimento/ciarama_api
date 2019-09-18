@@ -99,7 +99,7 @@ class Result<V, E> {
 
 }
 
-final _dateFmt = DateFormat('yyyyMMdd', 'pt_BR');
+final _dateFmt = DateFormat().add_yMd();
 final _dateFmtS = DateFormat('dd/MM/yyyy', 'pt_BR');
 
 typedef void FiltrarCallback(String filtro, String valor);
