@@ -54,6 +54,10 @@ String formataDataHora(String dataProt) {
   return '$dd/$mm/$yy - $h:$m';
 }
 
+String dataISO(DateTime dt) {
+  return dt.year.toString() + dt.month.toString().padLeft(2, '0') + dt.day.toString().padLeft(2, '0');
+}
+
 Widget profileImage(ImageProvider image, {double size = 100.0}) {
   return Container(
     width: size, height: size,
@@ -141,7 +145,7 @@ class FiltrarDialog extends StatefulWidget {
   final List<Filtro> filtrosDefault = [
     Filtro(id: 'data', titulo: 'Data', campo: (ctx, dt, out) => FlatButton(
       color: Theme.of(ctx).primaryColor,
-      child: Text('${_dateFmtS.format(_dateFmt.parse(dt))}'),
+      child: Text('${formataData(dt)}'),
       onPressed: () {
         showDatePicker(
           context: ctx,
@@ -180,7 +184,7 @@ class FiltrarDialog extends StatefulWidget {
 class _FiltrarDialogState extends State<FiltrarDialog> {
 
   String _criterio = 'data';
-  String _busca = _dateFmt.format(DateTime.now());
+  String _busca = dataISO(DateTime.now());
 
   @override
   Widget build(BuildContext context) {
