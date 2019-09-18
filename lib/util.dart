@@ -180,7 +180,7 @@ class FiltrarDialog extends StatefulWidget {
 class _FiltrarDialogState extends State<FiltrarDialog> {
 
   String _criterio = 'data';
-  String _busca = '';
+  String _busca = _dateFmt.format(DateTime.now());
 
   @override
   Widget build(BuildContext context) {
