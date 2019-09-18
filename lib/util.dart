@@ -179,7 +179,7 @@ class FiltrarDialog extends StatefulWidget {
 
 class _FiltrarDialogState extends State<FiltrarDialog> {
 
-  String _criterio = '';
+  String _criterio = 'data';
   String _busca = '';
 
   @override
