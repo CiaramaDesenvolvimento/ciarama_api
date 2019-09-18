@@ -58,6 +58,13 @@ String dataISO(DateTime dt) {
   return dt.year.toString() + dt.month.toString().padLeft(2, '0') + dt.day.toString().padLeft(2, '0');
 }
 
+DateTime dataISOtoDateTime(String data) {
+  final yy = data.substring(0, 4);
+  final mm = data.substring(4, 6);
+  final dd = data.substring(6, 8);
+  return DateTime(int.parse(yy), int.parse(mm), int.parse(dd));
+}
+
 Widget profileImage(ImageProvider image, {double size = 100.0}) {
   return Container(
     width: size, height: size,
@@ -149,7 +156,7 @@ class FiltrarDialog extends StatefulWidget {
       onPressed: () {
         showDatePicker(
           context: ctx,
-          initialDate: dt != null && dt.isNotEmpty ? _dateFmtS.parse(dt) : DateTime.now(),
+          initialDate: dt != null && dt.isNotEmpty ? dataISOtoDateTime(dt) : DateTime.now(),
           firstDate: DateTime(2001),
           lastDate: DateTime(2030)
         ).then((dt) {
