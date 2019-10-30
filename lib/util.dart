@@ -33,6 +33,8 @@ openURL(BuildContext context, String url, {String alt}) async {
 }
 
 String formataData(String data) {
+  if (data == null) return '';
+  if (data.length < 8) return data;
   final yy = data.substring(0, 4);
   final mm = data.substring(4, 6);
   final dd = data.substring(6, 8);
@@ -40,12 +42,16 @@ String formataData(String data) {
 }
 
 String formataHora(String hr) {
+  if (hr == null) return '';
+  if (hr.length < 4) return hr;
   String h = hr.substring(0, 2);
   String m = hr.substring(2, 4);
   return '$h:$m';
 }
 
 String formataDataHora(String dataProt) {
+  if (dataProt == null) return '';
+  if (dataProt.length < 12) return dataProt;
   String yy = dataProt.substring(0, 4);
   String mm = dataProt.substring(4, 6);
   String dd = dataProt.substring(6, 8);
@@ -59,6 +65,7 @@ String dataISO(DateTime dt) {
 }
 
 DateTime dataISOtoDateTime(String data) {
+  if (data.length < 8) return null;
   final yy = data.substring(0, 4);
   final mm = data.substring(4, 6);
   final dd = data.substring(6, 8);
