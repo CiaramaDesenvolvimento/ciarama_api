@@ -249,9 +249,9 @@ class Comentarios {
     print(ret);
   }
 
-  static Widget renderComment(ImageProvider pfp, String osCliente, Comentario cm, { bool useTimeAgo = false }) {
+  static Widget renderComment(ImageProvider pfp, String clienteCpf, Comentario cm, { bool useTimeAgo = false }) {
     var cargo = cm.autor.cargo;
-    if (osCliente == cm.autor.nome) cargo = 'CLIENTE';
+    if (clienteCpf.trim() == cm.autor.cpfCnpj.trim()) cargo = 'CLIENTE';
 
     final dtt = cm.data.substring(0, 8) + 'T' + cm.data.substring(8);
     final time = DateTime.parse(dtt);
@@ -285,13 +285,15 @@ class Comentarios {
               children: <Widget>[
                 profileImage(pfp, size: 42),
                 SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(cm.autor.nome, style: TextStyle(fontWeight: FontWeight.bold)),
-                    Text('($cargo)'),
-                  ],
-                )
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(cm.autor.nome, style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text('($cargo)'),
+                    ],
+                  )
+                ),
               ],
             ),
             Divider(height: 12),
