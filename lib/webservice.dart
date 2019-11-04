@@ -14,10 +14,15 @@ class HTTPRequest {
 
   HTTPRequest(
     this.baseUrl,
-    { this.child = '', this.auth = '' }
+    { this.child = '', this.auth = '', Map<String, String> header }
   ) {
     _client = http.Client();
     _header['authorization'] = this.auth;
+    if (header != null) {
+      for (var k in header.keys) {
+        _header.putIfAbsent(k, () => header[k]);
+      }
+    }
   }
 
   http.Request _request(String method, {String body='', String subchild = ''}) {
