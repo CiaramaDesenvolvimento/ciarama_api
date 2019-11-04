@@ -20,7 +20,9 @@ class HTTPRequest {
     _header['authorization'] = this.auth;
     if (header != null) {
       for (var k in header.keys) {
-        _header.putIfAbsent(k, () => header[k]);
+        if (!_header.containsKey(k))
+          _header.putIfAbsent(k, () => '');
+        _header[k] = header[k];
       }
     }
   }
