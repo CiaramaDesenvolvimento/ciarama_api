@@ -1,5 +1,7 @@
 import 'dart:convert';
-import 'package:path/path.dart';
+import 'dart:io';
+import 'package:ciarama_api/ciarama_api.dart';
+import 'package:path/path.dart' as path;
 import 'package:http/http.dart' as http;
 
 /// Ferramentas para auxiliar o acesso e manipulação de dados de WebServices
@@ -28,8 +30,8 @@ class HTTPRequest {
   }
 
   http.Request _request(String method, {String body='', String subchild = ''}) {
-    var url = join(baseUrl, child);
-    if (subchild != null && subchild.isNotEmpty) url = join(url, subchild);
+    var url = path.join(baseUrl, child);
+    if (subchild != null && subchild.isNotEmpty) url = path.join(url, subchild);
     final req = http.Request(method, Uri.parse(url));
     for (var k in _header.keys) {
       req.headers[k] = _header[k];
@@ -89,4 +91,22 @@ List<T> parseJson<T>(String jsonValue, JsonConverter<T> converter) {
 
 String basicAuth(String user, String pass) {
   return 'Basic ' + base64.encode(utf8.encode('$user:$pass'));
+}
+
+Future<bool> enviarEmail(String to, String subject, String body, { List<File> arquivos }) async {
+  final req = http.MultipartRequest('POST', Uri.parse('$INTEGRATOR/email'));
+  req.fields['assunto'] = subject;
+  req.fields['corpo'] = body;
+  req.fields['para'] = to;
+  if (arquivos != null) {
+    final fileDatas = await Future.wait(arquivos.map((fp) {
+      return fp.readAsBytes();
+    }));
+    for (var fp in fileDatas) {
+      final i = fileDatas.indexOf(fp);
+      req.files.add(http.MultipartFile.fromBytes('file$i', fp, filename: path.basename(arquivos[i].path)));
+    }
+  }
+  final res = await req.send();
+  return (res.statusCode == 200);
 }
