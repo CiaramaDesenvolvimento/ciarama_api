@@ -652,3 +652,20 @@ class Agendamentos {
   }
 
 }
+
+class Util {
+  static Future<Result<String, String>> registrarLog(int usuario, int sistema, String funcionalidade) async {
+    final req = HTTPRequest(
+      globais.INTEGRATOR,
+      child: 'log/$usuario/$sistema/$funcionalidade',
+      auth: basicAuth('CiaramaRM', 'C14r4m4')
+    );
+    final res = await req.post();
+    if (res == null) {
+      return Result.err('Falha ao se comunicar com o servidor.');
+    }
+
+    if (res.statusCode != 200) return Result.err(res.body);
+    return Result.ok('');
+  }
+}
