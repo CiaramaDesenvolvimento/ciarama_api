@@ -683,7 +683,7 @@ class Sistemas {
       child: 'sistemas',
       auth: basicAuth('CiaramaRM', 'C14r4m4')
     );
-    final res = await req.post();
+    final res = await req.get();
     if (res == null) {
       return Result.err('Falha ao se comunicar com o servidor.');
     }
