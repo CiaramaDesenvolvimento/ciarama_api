@@ -653,6 +653,46 @@ class Agendamentos {
 
 }
 
+class Sistema {
+  int id;
+  String descricao, obs, plataforma, local, icone;
+
+  Sistema({
+    this.id,
+    this.descricao,
+    this.obs,
+    this.plataforma,
+    this.local,
+    this.icone
+  });
+
+  factory Sistema.fromJson(Map<String, dynamic> json) => Sistema(
+    id: json['id'],
+    descricao: json['descricao'],
+    obs: json['obs'],
+    plataforma: json['plataforma'],
+    local: json['local'],
+    icone: json['icone']
+  );
+}
+
+class Sistemas {
+  static Future<Result<List<Sistema>, String>> listar() async {
+    final req = HTTPRequest(
+      globais.INTEGRATOR,
+      child: 'sistemas',
+      auth: basicAuth('CiaramaRM', 'C14r4m4')
+    );
+    final res = await req.post();
+    if (res == null) {
+      return Result.err('Falha ao se comunicar com o servidor.');
+    }
+
+    if (res.statusCode != 200) return Result.err(res.body);
+    return Result.ok(parseJson(res.body, (v) => Sistema.fromJson(v)));
+  }
+}
+
 class Util {
   static Future<Result<String, String>> registrarLog(int usuario, int sistema, String funcionalidade) async {
     final req = HTTPRequest(
