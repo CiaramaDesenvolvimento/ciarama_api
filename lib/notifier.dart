@@ -5,19 +5,19 @@ import 'package:ciarama_api/ciarama_api.dart';
 import 'package:ciarama_api/webservice.dart';
 import 'package:web_socket_channel/io.dart';
 
-class Mensagem {
+class MensagemNotifier {
   String appID, tipo;
   Uint8List dados;
 
-  Mensagem({
+  MensagemNotifier({
     this.appID,
     this.tipo,
     this.dados
   });
 
-  factory Mensagem.formJson(Map<String, dynamic> json) {
+  factory MensagemNotifier.formJson(Map<String, dynamic> json) {
     final dados = json.containsKey('dados') ? json['dados'] : null;
-    return Mensagem(
+    return MensagemNotifier(
       appID: json.containsKey('appID') ? json['appID'] : null,
       dados: dados != null ? base64.decode(dados) : null,
       tipo: json['tipo']
@@ -31,13 +31,16 @@ class Mensagem {
       'dados': base64.encode(dados)
     };
   }
+
+  Mensagem get innerMessage => Mensagem.fromJson(json.decode(utf8.decode(dados)));
+
 }
 
-typedef void MensagemRecebida(Mensagem m);
+typedef void MensagemRecebida(MensagemNotifier m);
 class Notifier {
   static IOWebSocketChannel _channel;
 
-  static Future<Result<String, String>> push(Mensagem m) async {
+  static Future<Result<String, String>> push(MensagemNotifier m) async {
     final client = HTTPRequest(NOTIFIER, child: "push", auth: basicAuth('CiaramaRM', 'C14r4m4'));
     try {
       final res = await client.post(body: json.encode(m.toJson()));
@@ -53,7 +56,7 @@ class Notifier {
   static void inicializar(MensagemRecebida mensagemRecebida) {
     _channel = IOWebSocketChannel.connect('ws://$IP_NOTIFIER/notifier/ws');
     _channel.stream.listen((msg) {
-      if (mensagemRecebida != null) mensagemRecebida(Mensagem.formJson(json.decode(msg)));
+      if (mensagemRecebida != null) mensagemRecebida(MensagemNotifier.formJson(json.decode(msg)));
     });
   }
 

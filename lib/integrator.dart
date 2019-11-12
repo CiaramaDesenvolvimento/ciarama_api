@@ -693,8 +693,101 @@ class Sistemas {
   }
 }
 
+class Mensagem {
+  int id, usuarioId, sistemaId;
+  String tipo, conteudo, os, osFilial, solicitacao, status, dataHora;
+
+  Mensagem({
+    this.id,
+    this.usuarioId,
+    this.sistemaId,
+    this.tipo,
+    this.conteudo,
+    this.os,
+    this.osFilial,
+    this.solicitacao,
+    this.status,
+    this.dataHora
+  });
+
+  factory Mensagem.fromJson(Map<String, dynamic> json) => Mensagem(
+    id: json['id'],
+    usuarioId: json['usuario'],
+    sistemaId: json['sistema'],
+    tipo: json['tipo'],
+    conteudo: json['conteudo'],
+    os: json['os'],
+    osFilial: json['osfilial'],
+    solicitacao: json['solicitacao'],
+    status: json['status'],
+    dataHora: json['dataHora']
+  );
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'usuario': usuarioId,
+    'sistema': sistemaId,
+    'tipo': tipo,
+    'conteudo': conteudo,
+    'os': os,
+    'osfilial': osFilial,
+    'solicitacao': solicitacao,
+    'status': status,
+    'dataHora': dataHora
+  };
+
+}
+
+class Mensageiro {
+  static Future<Result<int, String>> enviar(Mensagem msg) async {
+    final req = HTTPRequest(
+      globais.INTEGRATOR,
+      child: 'msg',
+      auth: basicAuth('CiaramaRM', 'C14r4m4')
+    );
+    final res = await req.post(body: json.encode(msg.toJson()));
+    if (res == null) {
+      return Result.err('Falha ao se comunicar com o servidor.');
+    }
+
+    if (res.statusCode != 200) return Result.err(res.body);
+    return Result.ok(int.parse(res.body));
+  }
+
+  static Future<Result<List<Mensagem>, String>> listar(int usuarioId) async {
+    final req = HTTPRequest(
+      globais.INTEGRATOR,
+      child: 'msg/$usuarioId',
+      auth: basicAuth('CiaramaRM', 'C14r4m4')
+    );
+    final res = await req.get();
+    if (res == null) {
+      return Result.err('Falha ao se comunicar com o servidor.');
+    }
+
+    if (res.statusCode != 200) return Result.err(res.body);
+    return Result.ok(parseJson(res.body, (v) => Mensagem.fromJson(v)));
+  }
+
+  static Future<Result<String, String>> setStatus(int mensagemId, int usuarioId, String status) async {
+    final req = HTTPRequest(
+      globais.INTEGRATOR,
+      child: 'msg/$mensagemId/$usuarioId/$status',
+      auth: basicAuth('CiaramaRM', 'C14r4m4')
+    );
+    final res = await req.put();
+    if (res == null) {
+      return Result.err('Falha ao se comunicar com o servidor.');
+    }
+
+    if (res.statusCode != 200) return Result.err(res.body);
+    return Result.ok('');
+  }
+
+}
+
 class Util {
-  static Future<Result<String, String>> registrarLog(int usuario, int sistema, String funcionalidade) async {
+  static Future<Result<String, String>> log(int usuario, int sistema, String funcionalidade) async {
     final req = HTTPRequest(
       globais.INTEGRATOR,
       child: 'log/$usuario/$sistema/$funcionalidade',

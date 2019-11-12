@@ -57,7 +57,11 @@ String formataDataHora(String dataProt) {
   String dd = dataProt.substring(6, 8);
   String h = dataProt.substring(8, 10);
   String m = dataProt.substring(10, 12);
-  return '$dd/$mm/$yy - $h:$m';
+  String s;
+  if (dataProt.length > 12) {
+    s = dataProt.substring(12, 14);
+  }
+  return s != null && s.isNotEmpty ? '$dd/$mm/$yy - $h:$m:$s' : '$dd/$mm/$yy - $h:$m';
 }
 
 String dataISO(DateTime dt) {
@@ -70,6 +74,24 @@ DateTime dataISOtoDateTime(String data) {
   final mm = data.substring(4, 6);
   final dd = data.substring(6, 8);
   return DateTime(int.parse(yy), int.parse(mm), int.parse(dd));
+}
+
+DateTime dataHora(String dh) {
+  if (dh == null) return null;
+  if (dh.length < 12) return null;
+  String yy = dh.substring(0, 4);
+  String mm = dh.substring(4, 6);
+  String dd = dh.substring(6, 8);
+  String h = dh.substring(8, 10);
+  String m = dh.substring(10, 12);
+  String s;
+  if (dh.length > 12) {
+    s = dh.substring(12, 14);
+  }
+  return DateTime(
+    int.parse(yy), int.parse(mm), int.parse(dd),
+    int.parse(h), int.parse(m), s != null ? int.parse(s) : 0
+  );
 }
 
 Widget profileImage(ImageProvider image, {double size = 100.0}) {
