@@ -739,6 +739,59 @@ class Mensagem {
 }
 
 class Mensageiro {
+  static Widget renderMensagem(BuildContext context, int usid, Mensagem msg, { void Function() onLida }) {
+    final time = timeago.format(dataHora(msg.dataHora), locale: 'pt_BR');
+    final lida = msg.status != null && msg.status.isNotEmpty;
+    return ListTile(
+      leading: lida ? null : Icon(Icons.new_releases, color: Colors.red),
+      title: Text(msg.conteudo, overflow: TextOverflow.ellipsis),
+      trailing: Text(time, style: TextStyle(color: Colors.grey)),
+      onTap: () {
+        if (!lida) {
+          Mensageiro.setStatus(msg.id, usid, '*');
+          if (onLida != null) onLida();
+        }
+
+        showDialog(
+          context: context, 
+          builder: (ctx) => AlertDialog(
+            title: Text('Mensagem'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Text(msg.conteudo),
+                Divider(),
+                Text(formataDataHora(msg.dataHora), textAlign: TextAlign.right, style: TextStyle(color: Colors.grey))
+              ],
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('FECHAR'),
+                onPressed: () => Navigator.pop(ctx),
+              )
+            ],
+          )
+        );
+      },
+    );
+  }
+
+  static setStatusAll(int usuarioId, String status) async {
+    final req = HTTPRequest(
+      globais.INTEGRATOR,
+      child: 'msg/all/$usuarioId/$status',
+      auth: basicAuth('CiaramaRM', 'C14r4m4')
+    );
+    final res = await req.put();
+    if (res == null) {
+      return Result.err('Falha ao se comunicar com o servidor.');
+    }
+
+    if (res.statusCode != 200) return Result.err(res.body);
+    return Result.ok('');
+  }
+
   static Future<Result<int, String>> enviar(Mensagem msg) async {
     final req = HTTPRequest(
       globais.INTEGRATOR,
