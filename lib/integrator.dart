@@ -748,8 +748,9 @@ class Mensageiro {
       trailing: Text(time, style: TextStyle(color: Colors.grey)),
       onTap: () {
         if (!lida) {
-          Mensageiro.setStatus(msg.id, usid, '*');
-          if (onLida != null) onLida();
+          Mensageiro.setStatus(msg.id, usid, '*').then((_) {
+            if (onLida != null) onLida();
+          });
         }
 
         showDialog(
@@ -780,7 +781,7 @@ class Mensageiro {
   static setStatusAll(int usuarioId, String status) async {
     final req = HTTPRequest(
       globais.INTEGRATOR,
-      child: 'msg/all/$usuarioId/$status',
+      child: 'msg/$usuarioId/$status',
       auth: basicAuth('CiaramaRM', 'C14r4m4')
     );
     final res = await req.put();
