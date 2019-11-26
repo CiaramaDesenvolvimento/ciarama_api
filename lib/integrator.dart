@@ -411,6 +411,25 @@ class Credenciamento {
     }
   }
 
+  static Future<Result<String, String>> recuperarSenha(String usuario) async {
+    final client = HTTPRequest(
+      globais.INTEGRATOR,
+      child: 'usuarios/recuperar/$usuario',
+      auth: basicAuth('CiaramaRM', 'C14r4m4')
+    );
+
+    final res = await client.put();
+    if (res == null) {
+      return Result.err('Falha ao se comunicar com o servidor.');
+    }
+
+    if (res.statusCode != 200) {
+      return Result.err(res.body);
+    } else {
+      return Result.ok(res.body.trim().replaceAll('"', ''));
+    }
+  }
+
   static Future<Result<String, String>> alteraSenha(Usuario user, String senhaNova) async {
     final client = HTTPRequest(
       globais.INTEGRATOR,
