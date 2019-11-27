@@ -16,17 +16,21 @@ class HTTPRequest {
 
   HTTPRequest(
     this.baseUrl,
-    { this.child = '', this.auth = '', Map<String, String> header }
+    { this.child = '', this.auth = '', Map<String, String> header, overrideHeader = false }
   ) {
     _client = http.Client();
-    _header['authorization'] = this.auth;
     if (header != null) {
-      for (var k in header.keys) {
-        if (!_header.containsKey(k))
-          _header.putIfAbsent(k, () => '');
-        _header[k] = header[k];
+      if (overrideHeader) {
+        _header = header;
+      } else {
+        for (var k in header.keys) {
+          if (!_header.containsKey(k))
+            _header.putIfAbsent(k, () => '');
+          _header[k] = header[k];
+        }
       }
     }
+    _header['authorization'] = this.auth;
   }
 
   http.Request _request(String method, {String body='', String subchild = ''}) {
