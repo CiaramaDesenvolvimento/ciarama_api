@@ -430,10 +430,11 @@ class Credenciamento {
     }
   }
 
-  static Future<Result<String, String>> alteraSenha(Usuario user, String senhaNova) async {
+  static Future<Result<String, String>> alteraSenha(String user, String senhaNova) async {
+    final senhaCod = base64.encode(utf8.encode(senhaNova));
     final client = HTTPRequest(
       globais.INTEGRATOR,
-      child: 'alterar/${user.cpfCnpj}/$senhaNova',
+      child: 'alterar/$user/$senhaCod',
       auth: basicAuth('CiaramaRM', 'C14r4m4')
     );
 
