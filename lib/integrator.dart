@@ -416,10 +416,8 @@ class Credenciamento {
       globais.INTEGRATOR,
       child: 'usuarios/recuperar/$usuario',
       auth: basicAuth('CiaramaRM', 'C14r4m4'),
-      header: {
-        'Content-Type': 'text/plain;charset=utf-8',
-        'Accept': 'text/plain;charset=utf-8'
-      }
+      header: { 'authorization': '' },
+      overrideHeader: true
     );
 
     final res = await client.get();
