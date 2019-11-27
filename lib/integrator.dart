@@ -418,7 +418,7 @@ class Credenciamento {
       auth: basicAuth('CiaramaRM', 'C14r4m4')
     );
 
-    final res = await client.put();
+    final res = await client.get();
     if (res == null) {
       return Result.err('Falha ao se comunicar com o servidor.');
     }
