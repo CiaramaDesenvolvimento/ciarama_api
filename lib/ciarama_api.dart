@@ -5,6 +5,7 @@ export 'integrator.dart';
 export 'util.dart';
 export 'persist.dart';
 export 'notifier.dart';
+export 'recuperacao.dart';
 
 import 'globais.dart' as globais;
 import 'package:timeago/timeago.dart' as timeago;
