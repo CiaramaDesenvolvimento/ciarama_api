@@ -1,3 +1,4 @@
+import 'package:ciarama_api/ciarama_api.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -138,3 +139,16 @@ class Result<V, E> {
   E get error => _error;
 
 }
+
+HTTPRequest integratorRequest({
+  String child = '',
+  Map<String, String> header,
+  bool overrideHeader = false
+}) => HTTPRequest(INTEGRATOR, child: child, auth: basicAuth('CiaramaRM', 'C14r4m4'), header: header, overrideHeader: overrideHeader);
+
+HTTPRequest webserviceRequest({
+  String child = '',
+  String auth = '',
+  Map<String, String> header,
+  bool overrideHeader = false
+}) => HTTPRequest(WEBSERVICE, child: child, auth: auth, header: header, overrideHeader: overrideHeader);
