@@ -768,14 +768,8 @@ class Mensageiro {
       leading: lida ? null : Icon(Icons.new_releases, color: Colors.red),
       title: Text(msg.conteudo, overflow: TextOverflow.ellipsis),
       trailing: Text(time, style: TextStyle(color: Colors.grey)),
-      onTap: () {
-        if (!lida) {
-          Mensageiro.setStatus(msg.id, usid, '*').then((_) {
-            if (onLida != null) onLida();
-          });
-        }
-
-        showDialog(
+      onTap: () async {
+        await showDialog(
           context: context, 
           builder: (ctx) => AlertDialog(
             title: Text('Mensagem'),
@@ -796,6 +790,10 @@ class Mensageiro {
             ],
           )
         );
+        if (!lida) {
+          final res = await Mensageiro.setStatus(msg.id, usid, '*');
+          if (onLida != null && res.isOk) onLida();
+        }
       },
     );
   }
