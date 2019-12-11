@@ -1,9 +1,13 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:ciarama_api/ciarama_api.dart';
 import 'package:ciarama_api/webservice.dart';
+import 'package:flutter/material.dart';
 import 'package:web_socket_channel/io.dart';
+
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class MensagemNotifier {
   String appID, tipo;
@@ -65,5 +69,56 @@ class Notifier {
     _channel.sink.close();
     _channel = null;
   }
+
+}
+
+class NotifierLocal {
+  static FlutterLocalNotificationsPlugin _plugin;
+  static StreamController<String> _stream;
+
+  static Future initialize() async {
+    WidgetsFlutterBinding.ensureInitialized();
+
+    _stream = StreamController<String>();
+    _plugin = FlutterLocalNotificationsPlugin();
+
+    final android = AndroidInitializationSettings('app_icon');
+    final ios = IOSInitializationSettings();
+    final settings = InitializationSettings(android, ios);
+    await _plugin.initialize(settings, onSelectNotification: (payload) async {
+      _stream.add(payload);
+    });
+  }
+
+  static Future show(String title, {
+    int id = 0,
+    String body,
+    String payload,
+
+    AndroidNotificationDetails androidOverride,
+    IOSNotificationDetails iosOverride
+  }) async {
+    final android = androidOverride == null ? AndroidNotificationDetails(
+        'notifier_notification', 'Notifier', 'Notificação do Ciarama Notifier',
+        importance: Importance.Max, priority: Priority.Max, ticker: 'ticker',
+    ) : androidOverride;
+    final ios = iosOverride == null ? IOSNotificationDetails(
+      presentAlert: true,
+      presentSound: true
+    ) : iosOverride;
+
+    final notf = NotificationDetails(android, ios);
+    await _plugin.show(id, title, body, notf, payload: payload);
+  }
+
+  static Future cancel({ int id = 0 }) async {
+    await _plugin.cancel(id);
+  }
+
+  static void close() {
+    _stream.close();
+  }
+
+  static Stream<String> get stream => _stream.stream;
 
 }

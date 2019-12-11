@@ -19,6 +19,7 @@ dependencies:
   web_socket_channel: ^1.0.15
   intl: ^0.15.8
   pinput: ^0.1.10
+  flutter_local_notifications: ^0.8.4+3
 
 dev_dependencies:
   flutter_test:
