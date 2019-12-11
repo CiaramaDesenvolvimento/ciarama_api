@@ -828,10 +828,10 @@ class Mensageiro {
     return Result.ok(int.parse(res.body));
   }
 
-  static Future<Result<List<Mensagem>, String>> listar(int usuarioId) async {
+  static Future<Result<List<Mensagem>, String>> listar() async {
     final req = HTTPRequest(
       globais.INTEGRATOR,
-      child: 'msg/$usuarioId',
+      child: 'msg',
       auth: basicAuth('CiaramaRM', 'C14r4m4')
     );
     final res = await req.get();
