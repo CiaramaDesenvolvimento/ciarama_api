@@ -74,19 +74,19 @@ class Notifier {
 
 class NotifierLocal {
   static FlutterLocalNotificationsPlugin _plugin;
-  static StreamController<String> _stream;
+  static ValueListener<String> _stream;
 
   static Future initialize() async {
     WidgetsFlutterBinding.ensureInitialized();
 
-    _stream = StreamController<String>();
+    _stream = ValueListener<String>();
     _plugin = FlutterLocalNotificationsPlugin();
 
     final android = AndroidInitializationSettings('app_icon');
     final ios = IOSInitializationSettings();
     final settings = InitializationSettings(android, ios);
     await _plugin.initialize(settings, onSelectNotification: (payload) async {
-      _stream.add(payload);
+      _stream.send(payload);
     });
   }
 
@@ -116,9 +116,9 @@ class NotifierLocal {
   }
 
   static void close() {
-    _stream.close();
+    _stream.listen(null);
   }
 
-  static Stream<String> get stream => _stream.stream;
+  static ValueListener<String> get listener => _stream;
 
 }
