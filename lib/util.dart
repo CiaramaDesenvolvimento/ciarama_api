@@ -140,6 +140,17 @@ class Result<V, E> {
 
 }
 
+class ValueListener<V> {
+  void Function(V value) _listener;
+
+  listen(void Function(V value) listener) => _listener = listener;
+  
+  send(V value) {
+    if (_listener != null) _listener(value);
+  }
+
+}
+
 HTTPRequest integratorRequest({
   String child = '',
   Map<String, String> header,
