@@ -163,3 +163,28 @@ HTTPRequest webserviceRequest({
   Map<String, String> header,
   bool overrideHeader = false
 }) => HTTPRequest(WEBSERVICE, child: child, auth: auth, header: header, overrideHeader: overrideHeader);
+
+String clearMarkdown(String md) {
+  var res = md;
+  
+  // Remove horizontal rule
+  res = res.replaceAll(RegExp(r'^(-\s*?|\*\s*?|_\s*?){3,}\s*$', multiLine: true), '');
+
+  res = res
+    .replaceAll(RegExp(r'\n={2,}'), '')
+    .replaceAll(RegExp(r'~{3}.*\n'), '')
+    .replaceAll(RegExp(r'~~'), '')
+    .replaceAll(RegExp(r'`{3}.*\n'), '')
+    .replaceAll(RegExp(r'^[=\-]{2,}\s*$'), '')
+    .replaceAll(RegExp(r'\[\^.+?\](\: .*?$)?'), '')
+    .replaceAll(RegExp(r'\s{0,2}\[.*?\]: .*?$'), '')
+    .replaceAll(RegExp(r'\!\[(.*?)\][\[\(].*?[\]\)]'), '')
+    .replaceAllMapped(RegExp(r'\[(.*?)\][\[\(].*?[\]\)]'), (m) => m.group(1))
+    .replaceAll(RegExp(r'^\s{0,3}>\s?', multiLine: true), '')
+    .replaceAllMapped(RegExp(r'([\*_]{1,3})(\S.*?\S{0,1})\1'), (m) => m.group(2))
+    .replaceAllMapped(RegExp(r'([\*_]{1,3})(\S.*?\S{0,1})\1'), (m) => m.group(2))
+    .replaceAllMapped(RegExp(r'`(.+?)`'), (m) => m.group(1))
+    .replaceAllMapped(RegExp(r'(#+)(.*)'), (m) => m.group(2).trim());
+
+  return res;
+}

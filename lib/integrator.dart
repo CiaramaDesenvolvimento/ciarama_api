@@ -762,7 +762,7 @@ class Mensagem {
 }
 
 class Mensageiro {
-  static Widget renderMensagem(BuildContext context, int usid, Mensagem msg, { void Function() onLida, void Function(String) onLinkTap }) {
+  static Widget renderMensagem(BuildContext context, int usid, Mensagem msg, { void Function() onLida }) {
     final time = timeago.format(dataHora(msg.dataHora), locale: 'pt_BR');
     final lida = msg.status != null && msg.status.isNotEmpty;
     final rgx = RegExp(r'_{1,}([ a-z0-9]+)_{1,}', caseSensitive: false, multiLine: true);
@@ -779,7 +779,7 @@ class Mensageiro {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                MarkdownBody(data: msg.conteudo, onTapLink: onLinkTap),
+                MarkdownBody(data: msg.conteudo, onTapLink: (lnk) => openURL(context, lnk)),
                 Divider(),
                 Text(formataDataHora(msg.dataHora), textAlign: TextAlign.right, style: TextStyle(color: Colors.grey))
               ],
