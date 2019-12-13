@@ -765,10 +765,9 @@ class Mensageiro {
   static Widget renderMensagem(BuildContext context, int usid, Mensagem msg, { void Function() onLida }) {
     final time = timeago.format(dataHora(msg.dataHora), locale: 'pt_BR');
     final lida = msg.status != null && msg.status.isNotEmpty;
-    final rgx = RegExp(r'_{1,}([ a-z0-9]+)_{1,}', caseSensitive: false, multiLine: true);
     return ListTile(
       leading: lida ? null : Icon(Icons.new_releases, color: Colors.red),
-      title: Text(msg.conteudo.replaceAll(rgx, ''), overflow: TextOverflow.ellipsis),
+      title: Text(clearMarkdown(msg.conteudo), overflow: TextOverflow.ellipsis),
       trailing: Text(time, style: TextStyle(color: Colors.grey)),
       onTap: () async {
         await showDialog(
