@@ -20,6 +20,7 @@ dependencies:
   intl: ^0.16.0
   pinput: ^0.1.10
   flutter_local_notifications: ^0.8.4+3
+  flutter_markdown: ^0.3.2
 
 dev_dependencies:
   flutter_test:

@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:ciarama_api/util.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:open_file/open_file.dart';
 import 'package:path/path.dart';
@@ -761,12 +762,13 @@ class Mensagem {
 }
 
 class Mensageiro {
-  static Widget renderMensagem(BuildContext context, int usid, Mensagem msg, { void Function() onLida }) {
+  static Widget renderMensagem(BuildContext context, int usid, Mensagem msg, { void Function() onLida, void Function(String) onLinkTap }) {
     final time = timeago.format(dataHora(msg.dataHora), locale: 'pt_BR');
     final lida = msg.status != null && msg.status.isNotEmpty;
+    final rgx = RegExp(r'_{1,}([ a-z0-9]+)_{1,}', caseSensitive: false, multiLine: true);
     return ListTile(
       leading: lida ? null : Icon(Icons.new_releases, color: Colors.red),
-      title: Text(msg.conteudo, overflow: TextOverflow.ellipsis),
+      title: Text(msg.conteudo.replaceAll(rgx, ''), overflow: TextOverflow.ellipsis),
       trailing: Text(time, style: TextStyle(color: Colors.grey)),
       onTap: () async {
         await showDialog(
@@ -777,7 +779,7 @@ class Mensageiro {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Text(msg.conteudo),
+                MarkdownBody(data: msg.conteudo, onTapLink: onLinkTap),
                 Divider(),
                 Text(formataDataHora(msg.dataHora), textAlign: TextAlign.right, style: TextStyle(color: Colors.grey))
               ],
