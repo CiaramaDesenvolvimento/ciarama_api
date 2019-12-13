@@ -26,7 +26,7 @@ final Equipamentos = {
 
 openURL(BuildContext context, String url, {String alt}) async {
 	if (await canLaunch(url)) {
-		await launch(url);
+		await launch(url, forceSafariVC: false, forceWebView: false);
 	} else {
 		if (alt != null && alt.isNotEmpty)
       await launch(alt);
