@@ -778,7 +778,12 @@ class Mensageiro {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                MarkdownBody(data: msg.conteudo, onTapLink: (lnk) => openURL(context, lnk)),
+                MarkdownBody(
+                  data: msg.conteudo,
+                  onTapLink: (lnk) => openURL(context, lnk),
+                  styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)),
+                  styleSheetTheme: MarkdownStyleSheetBaseTheme.material
+                ),
                 Divider(),
                 Text(formataDataHora(msg.dataHora), textAlign: TextAlign.right, style: TextStyle(color: Colors.grey))
               ],
