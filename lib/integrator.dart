@@ -717,13 +717,12 @@ class Sistemas {
 }
 
 class Mensagem {
-  int id, usuarioId, sistemaId;
+  int id, usuarioId;
   String tipo, conteudo, os, osFilial, solicitacao, status, dataHora;
 
   Mensagem({
     this.id,
     this.usuarioId,
-    this.sistemaId,
     this.tipo,
     this.conteudo,
     this.os,
@@ -736,7 +735,6 @@ class Mensagem {
   factory Mensagem.fromJson(Map<String, dynamic> json) => Mensagem(
     id: json['id'],
     usuarioId: json['usuario'],
-    sistemaId: json['sistema'],
     tipo: json['tipo'],
     conteudo: json['conteudo'],
     os: json['os'],
@@ -749,7 +747,6 @@ class Mensagem {
   Map<String, dynamic> toJson() => {
     'id': id,
     'usuario': usuarioId,
-    'sistema': sistemaId,
     'tipo': tipo,
     'conteudo': conteudo,
     'os': os,
@@ -762,14 +759,44 @@ class Mensagem {
 }
 
 class Mensageiro {
-  static Widget renderMensagem(BuildContext context, int usid, Mensagem msg, { void Function() onLida }) {
+  static Widget renderMensagem(
+    BuildContext context,
+    int usid,
+    Mensagem msg,
+    {
+      void Function() onLida,
+      void Function(String os, String filial) onBotao
+    }
+  ) {
     final time = timeago.format(dataHora(msg.dataHora), locale: 'pt_BR');
     final lida = msg.status != null && msg.status.isNotEmpty;
+    
+    var btnArea;
+    if (msg.solicitacao != null && msg.solicitacao.isNotEmpty) {
+      btnArea = FlatButton.icon(
+        textColor: Theme.of(context).primaryColor,
+        icon: Icon(Icons.link),
+        label: Text(msg.solicitacao),
+        onPressed: () => onBotao(msg.solicitacao, 'SOL'),
+      );
+    } else if (msg.os != null && msg.os.isNotEmpty) {
+      btnArea = FlatButton.icon(
+        textColor: Theme.of(context).primaryColor,
+        icon: Icon(Icons.link),
+        label: Text(msg.os),
+        onPressed: () => onBotao(msg.os, msg.osFilial),
+      );
+    } else btnArea = Container();
+
     return ListTile(
       leading: lida ? null : Icon(Icons.new_releases, color: Colors.red),
       title: Text(clearMarkdown(msg.conteudo), overflow: TextOverflow.ellipsis),
       trailing: Text(time, style: TextStyle(color: Colors.grey)),
       onTap: () async {
+        if (!lida) {
+          final res = await Mensageiro.setStatus(msg.id, usid, '*');
+          if (onLida != null && res.isOk) onLida();
+        }
         await showDialog(
           context: context, 
           builder: (ctx) => AlertDialog(
@@ -782,8 +809,9 @@ class Mensageiro {
                   data: msg.conteudo,
                   onTapLink: (lnk) => openURL(context, lnk),
                   styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)),
-                  styleSheetTheme: MarkdownStyleSheetBaseTheme.material
                 ),
+                SizedBox(height: 10),
+                btnArea,
                 Divider(),
                 Text(formataDataHora(msg.dataHora), textAlign: TextAlign.right, style: TextStyle(color: Colors.grey))
               ],
@@ -796,10 +824,6 @@ class Mensageiro {
             ],
           )
         );
-        if (!lida) {
-          final res = await Mensageiro.setStatus(msg.id, usid, '*');
-          if (onLida != null && res.isOk) onLida();
-        }
       },
     );
   }
