@@ -791,7 +791,7 @@ class Mensageiro {
     final conteudoLns = clearMarkdown(msg.conteudo).split(RegExp(r'[\n\r]'));
     final conteudoSmall = conteudoLns.isNotEmpty ? conteudoLns[0] : '...';
 
-    return ListTile(
+    final content = ListTile(
       leading: lida ? null : Icon(Icons.new_releases, color: Colors.red),
       title: Text(conteudoSmall, overflow: TextOverflow.ellipsis, maxLines: 1),
       trailing: Text(time, style: TextStyle(color: Colors.grey)),
@@ -828,6 +828,10 @@ class Mensageiro {
           )
         );
       },
+    );
+    return Card(
+      margin: EdgeInsets.all(5.0),
+      child: content,
     );
   }
 
