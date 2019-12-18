@@ -788,9 +788,12 @@ class Mensageiro {
       );
     } else btnArea = Container();
 
+    final conteudoLns = clearMarkdown(msg.conteudo).split(RegExp(r'[\n\r]'));
+    final conteudoSmall = conteudoLns.isNotEmpty ? conteudoLns[0] : '...';
+
     return ListTile(
       leading: lida ? null : Icon(Icons.new_releases, color: Colors.red),
-      title: Text(clearMarkdown(msg.conteudo), overflow: TextOverflow.ellipsis),
+      title: Text(conteudoSmall, overflow: TextOverflow.ellipsis, maxLines: 1),
       trailing: Text(time, style: TextStyle(color: Colors.grey)),
       onTap: () async {
         if (!lida) {
