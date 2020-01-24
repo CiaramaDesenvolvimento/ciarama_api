@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:ciarama_api/ciarama_api.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -113,6 +115,63 @@ Widget profileImage(ImageProvider image, {double size = 100.0}) {
       ]
     ),
   );
+}
+
+class Logo extends StatelessWidget {
+  const Logo(this.asset, {
+    Key key,
+    this.size = 200.0,
+  }) : super(key: key);
+
+  final String asset;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: size / 10.0,
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(size / 6)
+      ),
+      child: Image.asset(asset, width: size,),
+    );
+  }
+}
+
+class Avatar extends StatelessWidget {
+  const Avatar({
+    Key key,
+    this.foto,
+    this.size = 150.0,
+  }) : super(key: key);
+
+  final Uint8List foto;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    var vfoto;
+    if (foto != null) {
+      vfoto = Image.memory(foto);
+    }
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 500),
+      curve: Curves.fastLinearToSlowEaseIn,
+      width: size,
+      height: size,
+      padding: EdgeInsets.all(4.0),
+      decoration: BoxDecoration(
+        color: Colors.grey[300],
+        borderRadius: BorderRadius.circular(size / 2.0),
+      ),
+      child: ClipRRect(
+        clipBehavior: Clip.antiAlias,
+        child: vfoto == null ? Icon(Icons.person, size: size / 2.0, color: Colors.grey) : vfoto,
+        borderRadius: BorderRadius.circular(size / 2.0),
+      )
+    );
+  }
 }
 
 class Result<V, E> {
