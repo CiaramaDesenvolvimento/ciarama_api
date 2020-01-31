@@ -250,7 +250,7 @@ class Comentarios {
     print(ret);
   }
 
-  static Widget renderComment(ImageProvider pfp, String clienteCpf, Comentario cm, { bool useTimeAgo = false }) {
+  static Widget renderComment(Uint8List image, String clienteCpf, Comentario cm, { bool useTimeAgo = false }) {
     var cargo = cm.autor.cargo;
     if (clienteCpf.trim() == cm.autor.cpfCnpj.trim()) cargo = 'CLIENTE';
 
@@ -284,7 +284,7 @@ class Comentarios {
           children: <Widget>[
             Row(
               children: <Widget>[
-                profileImage(pfp, size: 42),
+                Avatar(foto: image, size: 42),
                 SizedBox(width: 10),
                 Flexible(
                   child: Column(
