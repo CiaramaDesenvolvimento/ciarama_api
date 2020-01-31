@@ -247,3 +247,95 @@ String clearMarkdown(String md) {
 
   return res;
 }
+
+class DadosQRCode {
+  String chassi, modelo, grupo, ano;
+  DadosQRCode({ this.chassi, this.modelo, this.grupo, this.ano });
+
+  factory DadosQRCode.fromCode(String code) {
+    // Tokenizar
+    var spl = code.split('').toList();
+    var tokens = <Map<String, String>>[];
+    final idregex = RegExp(r'[a-zA-Z0-9_\/\\\.,]');
+    while (spl.isNotEmpty) {
+      final c = spl.first;
+      if (c.contains(idregex)) {
+        var str = '';
+        while (spl.isNotEmpty && spl.first.contains(idregex)) {
+          str += spl.removeAt(0);
+        }
+        tokens.add({ 'type': 'VAL', 'value': str.trim() });
+      } else if ([';', ':', '='].contains(c)) {
+        final sym = spl.removeAt(0);
+        tokens.add({ 'type': 'SYM', 'value': sym });
+      } else {
+        spl.removeAt(0);
+      }
+    }
+
+    // Tradutor
+    final p = _SDFParser(tokens: tokens);
+    final entries = p.parse();
+
+    return DadosQRCode(
+      chassi: entries['CHASSI'],
+      modelo: entries['MODELO'],
+      grupo: entries['GRUPO'],
+      ano: entries['ANO'],
+    );
+  }
+
+}
+
+class _SDFParser {
+  List<Map<String, String>> tokens;
+  _SDFParser({ this.tokens });
+
+  _val() {
+    if (tokens.first['type'] != 'VAL') {
+      return null;
+    }
+    return tokens.removeAt(0)['value'];
+  }
+
+  _sym({ String expect }) {
+    if (tokens.first['type'] != 'SYM') {
+      throw Exception('Esperava um símbolo.');
+    }
+    if (expect != null && tokens.first['value'] != expect) {
+      throw Exception('Esperava um "$expect". "${tokens.first['value']}" é inválido.');
+    }
+    tokens.removeAt(0);
+  }
+
+  MapEntry<String, String> _entry() {
+    final name = _val();
+    if (name != null) {
+      try {
+        _sym(expect: ':');
+        final value = _val();
+        if (value != null) {
+          try {
+            _sym(expect: ';');
+            return MapEntry(name, value);
+          } catch (e) { throw e; }
+        } else {
+          throw Exception('Valor inválido.');
+        }
+      } catch (e) { throw e; }
+    } else {
+      throw Exception('Nome inválido.');
+    }
+  }
+
+  Map<String, String> parse() {
+    final ret = <String, String>{};
+    while (tokens.isNotEmpty) {
+      try {
+        final e = _entry();
+        ret.addEntries([e]);
+      } catch (e) { throw e; }
+    }
+    return ret;
+  }
+}
